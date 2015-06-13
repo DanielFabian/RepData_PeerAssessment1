@@ -45,6 +45,7 @@ and here is the histogram:
 ``` {r}
 g <- ggplot(nStepsPerDay, aes(`total steps`))
 g <- g + geom_histogram()
+g <- g + ggtitle("histogram of number of steps per day")
 g
 ```
 
@@ -60,7 +61,24 @@ median(nStepsPerDay$`total steps`, na.rm = T)
 
 
 ## What is the average daily activity pattern?
+Because we are interested in plotting a time series, it seems like a better idea to have a rough value rather than none, so we filter out `NA` values. We get the mean number of steps per 5-minute time period. 
+``` {r}
+nStepsPerTimeInterval <- aggregate(activity$steps, list(activity$interval), mean, na.rm=T)
+names(nStepsPerTimeInterval) <- c("interval", "average steps")
+```
 
+here the time series of mean steps per time interval:
+``` {r}
+g <- ggplot(nStepsPerTimeInterval, aes(x=interval, y = `average steps`))
+g <- g + geom_line()
+g <- g + ggtitle("average number of steps per time interval")
+g
+```
+
+the interval with the most steps in average is:
+``` {r}
+nStepsPerTimeInterval[which.max(nStepsPerTimeInterval$`average steps`), "interval"]
+```
 
 
 ## Imputing missing values
